@@ -1,3 +1,5 @@
+import org.apache.commons.logging.LogFactory
+
 class PostmarkGrailsPlugin {
     // the plugin version
     def version = "0.1"
@@ -55,28 +57,22 @@ are used, it will be logged as an error and continue.
     }
 
 	def configureSendMail(application, applicationContext) {
-		log = LogFactory.getLog(PostmarkGrailsPlugin.class);
-		
+		def log = LogFactory.getLog(PostmarkGrailsPlugin.class);
+
 		def manager = org.codehaus.groovy.grails.plugins.PluginManagerHolder.pluginManager
 		if(manager?.hasGrailsPlugin("mail")) {
-			log.error "Replacing mail plugin's [sendMail] with postmark plugin's [sendMail]"
-		} else {
-			log.error "Couldn't get ahold of plugin manager."
-		}
-		
-		//adding sendMail to controllers
-	    application.controllerClasses*.metaClass*.sendMail = {Closure callable ->
-			applicationContext.postmarkService?.sendMail(callable)
+			log.warn "Replacing mail plugin's [sendMail] with postmark plugin's [sendMail]"
 		}
 
-		//adding sendMail to all services, besides the mailService of the mail plugin and postmarkService of this plugin
+	    application.controllerClasses*.metaClass*.sendMail = {Closure callable ->
+			applicationContext.postmarkService.sendPostmarkMail(callable)
+		}
+
 		application.serviceClasses.each {
 			if(it.metaClass?.getTheClass()?.name != applicationContext.mailService?.metaClass?.getTheClass()?.name && 
 				it.metaClass?.getTheClass()?.name != applicationContext.postmarkService?.metaClass?.getTheClass()?.name) {
-					
-				log.error("Adding sendMail to sevice: ${it}")
 				it.metaClass*.sendMail = {Closure callable ->
-					applicationContext.postmarkService?.sendMail(callable)
+					applicationContext.postmarkService.sendPostmarkMail(callable)
 				}
 			}
 		}
