@@ -1,0 +1,6 @@
+DefaultPackage
+grails-app.conf
+grails-app.services.grails.plugins.postmark
+scripts
+src.groovy.grails.plugins.postmark
+test.unit.org.grails.mail
