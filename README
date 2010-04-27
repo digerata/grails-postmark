@@ -2,3 +2,21 @@ This plugin provides an API with almost exact parity to the Grails Mail plugin. 
 
 It does not support attachments as Postmark doesn't provide that capability. If attachments are used, it will be logged as an error and continue.
 
+To install:
+    grails install-plugin postmark
+
+To configure, add to your Config.groovy:
+
+    postmark {
+        apikey = "Your API Key"
+    }
+
+If you wish to utilize the tagging feature of Postmark, this plugin adds a new call to the sendMail method, tag:
+	
+	sendMail {
+		to "email@example.com"
+		tag "Registration"
+	}
+
+If any plugins in your project utilize the mail plugin, they will automatically be switched to use postmark functionality instead.
+
