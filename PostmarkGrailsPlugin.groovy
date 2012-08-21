@@ -6,7 +6,7 @@ class PostmarkGrailsPlugin {
     // the version or versions of Grails the plugin is designed for
     def grailsVersion = "1.3.0.RC1 > *"
     // the other plugins this plugin depends on
-    def dependsOn = [rest:0.3]
+    def dependsOn = [rest:0.3 > *]
 	def loadAfter = ['mail']
 	def observe = ['controllers','services']
 
